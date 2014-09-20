@@ -1,0 +1,10 @@
+{
+  "action": 
+    {
+    "text"   : "center",
+    "cp"     : "nw",
+    "init"   : "ne",
+    "width"  : ["1", "in"],
+    "height" : ["1", "in"]
+  }
+}

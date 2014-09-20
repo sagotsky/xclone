@@ -1,0 +1,14 @@
+{
+  "sprint": {
+    "text": "Move 5",
+    "cp": 2,
+    "init": 3,
+    "layout": "action"
+  },
+  "walk": {
+    "text": "Move 3",
+    "cp": 1,
+    "init": 2,
+    "layout": "action"
+  }
+}
