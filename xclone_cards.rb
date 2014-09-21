@@ -5,37 +5,23 @@ require 'prawn/measurement_extensions'
 require 'prawn/table'
 require 'json'
 
-
-# spit out coordinates for next textbox for grid 
 class Gridder
-  @x = -1
-  @y = 1
+  attr_accessor :x, :y, :grid
 
-  class << self
-    attr_accessor :x
-    attr_accessor :y
+  def initialize(x, y)
+    @x = x
+    @y = y
+    init_grid
+  end
+
+  def init_grid
+    @grid = (0..@x).to_a.product( (1..@y).to_a )
   end
 
   def next
-    max_x = 7
-    max_y = 11
-
-    self.class.x += 1
-
-    if self.class.x == max_x
-      self.class.x = 0
-      self.class.y += 1
-    end
-
-    if self.class.y == max_y
-      self.class.y = 1
-    end
-
-    return [self.class.x, self.class.y]
-
+    @grid.empty? ? (init_grid ; nil) : @grid.pop
   end
 end
-
 
 
 def json_file(filename)
@@ -48,17 +34,21 @@ layouts = json_file('layouts.json')
 c = 0
 
 Prawn::Document.generate('xclone-cards.pdf') do 
-  grid = Gridder.new
+  grid = Gridder.new 6, 10
 
   deck.each do |card, count|
     card = cards[card]
     layout = layouts[card['layout']]
 
     count.times do
-      c += 1
 
-      at_xy = grid.next.map &:in
-      start_new_page if at_xy == [0, 1.in] && c > 1 
+      at_xy = grid.next
+      if at_xy.nil?
+        start_new_page
+        at_xy = grid.next
+      end
+      at_xy = at_xy.map &:in
+
 
       stroke_rectangle at_xy, 1.in, 1.in
 
@@ -81,10 +71,7 @@ Prawn::Document.generate('xclone-cards.pdf') do
           when 'center' then { valign: :center, align: :center }
         end
 
-      p val
-      val = "[#{c}] #{val}" 
       text_box val.to_s, params
-
       end
     end
   end
