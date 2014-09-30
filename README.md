@@ -7,7 +7,6 @@ Needed tokens for a board game project.  Pen and paper was too slow, especially 
 
 Requires ruby plus the following gems:
 * prawn
-* prawn/measurement_extensions
-* prawn/table
+* prawn-table
 * json
 
